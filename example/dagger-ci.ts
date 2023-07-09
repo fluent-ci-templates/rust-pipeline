@@ -1,5 +1,5 @@
 import Client, { connect } from "@dagger.io/dagger";
-import { Dagger } from "https://deno.land/x/rust_pipeline@v0.1.1/mod.ts";
+import { Dagger } from "https://deno.land/x/rust_pipeline@v0.1.2/mod.ts";
 
 const { build, test } = Dagger;
 
