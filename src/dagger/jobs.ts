@@ -3,7 +3,7 @@ import Client from "@dagger.io/dagger";
 export const test = async (
   client: Client,
   src = ".",
-  options: string[] = []
+  options: string[] = [],
 ) => {
   const context = client.host().directory(src);
   const ctr = client
@@ -24,7 +24,7 @@ export const test = async (
 export const build = async (
   client: Client,
   src = ".",
-  options: string[] = []
+  options: string[] = [],
 ) => {
   const context = client.host().directory(src);
   const ctr = client

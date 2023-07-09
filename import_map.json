@@ -2,13 +2,13 @@
   "imports": {
     "@dagger.io/dagger": "https://esm.sh/v128/*@dagger.io/dagger@0.6.3",
     "fluent_gitlab_ci": "https://deno.land/x/fluent_gitlab_ci@v0.3.2/mod.ts",
-    "url": "node:url",
-    "readline": "node:readline",
-    "process": "node:process",
-    "path": "node:path",
-    "os": "node:os",
+    "crypto": "node:crypto",
     "fs": "node:fs",
-    "crypto": "node:crypto"
+    "os": "node:os",
+    "path": "node:path",
+    "process": "node:process",
+    "readline": "node:readline",
+    "url": "node:url"
   },
   "scopes": {
     "https://esm.sh/v128/": {
