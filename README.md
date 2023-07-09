@@ -27,7 +27,7 @@ import { GitLab } from "https://deno.land/x/rust_pipeline/mod.ts";
 const { build, test } = GitLab;
 
 const const pipeline = new GitlabCI()
-  .image("denoland/deno:alpine")
+  .image("rust:latest")
   .addJob("test", test)
   .addJob("build", build);
 
