@@ -53,7 +53,13 @@ build:
 ## 🧪 Advanced Usage
 
 This package also provides a ready-to-use pipeline for
-[Dagger](https://dagger.io/):
+[Dagger](https://dagger.io/), just run the following command on your Rust project:
+
+```sh
+dagger run deno run -A https://deno.land/x/rust_pipeline/ci.ts
+```
+
+Or, if you want to use the predefined jobs:
 
 ```ts
 import Client, { connect } from "@dagger.io/dagger";
