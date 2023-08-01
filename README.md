@@ -44,10 +44,12 @@ import { Dagger } from "https://deno.land/x/rust_pipeline/mod.ts";
 
 const { build, test } = Dagger;
 
-export default function pipeline(src = ".") {
+function pipeline(src = ".") {
   connect(async (client: Client) => {
     await test(client, src);
     await build(client, src);
   });
 }
+
+pipeline();
 ```
