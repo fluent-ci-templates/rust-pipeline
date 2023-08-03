@@ -7,7 +7,7 @@
 A ready-to-use CI/CD Pipeline for your Rust projects.
 ## 🚀 Usage
 
-Run the following command:
+Run the following command in your Rust Project:
 
 ```bash
 dagger run fluentci rust_pipeline
