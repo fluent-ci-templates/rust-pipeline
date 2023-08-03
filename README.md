@@ -13,7 +13,14 @@ Run the following command in your Rust Project:
 dagger run fluentci rust_pipeline
 ```
 
-Or, if you want to use it as a template:
+Or if you want to run specific jobs:
+
+```bash
+dagger run fluentci rust_pipeline test build
+```
+
+
+if you want to use it as a template:
 
 ```bash
 fluentci init -t rust
