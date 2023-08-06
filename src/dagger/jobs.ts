@@ -1,5 +1,10 @@
 import Client from "@dagger.io/dagger";
 
+export enum Job {
+  test = "test",
+  build = "build",
+}
+
 export const test = async (
   client: Client,
   src = ".",
@@ -7,7 +12,7 @@ export const test = async (
 ) => {
   const context = client.host().directory(src);
   const ctr = client
-    .pipeline("test")
+    .pipeline(Job.test)
     .container()
     .from("rust:latest")
     .withDirectory("/app", context, {
@@ -30,7 +35,7 @@ export const build = async (
 ) => {
   const context = client.host().directory(src);
   const ctr = client
-    .pipeline("build")
+    .pipeline(Job.build)
     .container()
     .from("rust:latest")
     .withDirectory("/app", context, {
@@ -44,4 +49,27 @@ export const build = async (
   const result = await ctr.stdout();
 
   console.log(result);
+};
+
+export type JobExec = (
+  client: Client,
+  src?: string
+) =>
+  | Promise<void>
+  | ((
+      client: Client,
+      src?: string,
+      options?: {
+        ignore: string[];
+      }
+    ) => Promise<void>);
+
+export const runnableJobs: Record<Job, JobExec> = {
+  [Job.test]: test,
+  [Job.build]: build,
+};
+
+export const jobDescriptions: Record<Job, string> = {
+  [Job.test]: "Run tests",
+  [Job.build]: "Build the project",
 };
