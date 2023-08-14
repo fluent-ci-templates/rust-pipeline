@@ -10,5 +10,8 @@
   },
   "lint": {
     "exclude": ["example/", ".fluentci/"]
+  },
+  "test": {
+    "exclude": ["example/", ".fluentci/"]
   }
 }
