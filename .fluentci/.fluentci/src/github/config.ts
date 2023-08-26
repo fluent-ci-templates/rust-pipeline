@@ -19,7 +19,7 @@ export function generateYaml() {
         uses: "actions/checkout@v2",
       },
       {
-        uses: "denolib/setup-deno@v2",
+        uses: "denoland/setup-deno@v1",
         with: {
           "deno-version": "v1.36",
         },
