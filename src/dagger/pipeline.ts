@@ -1,4 +1,4 @@
-import Client, { connect } from "@dagger.io/dagger";
+import Client, { connect } from "@fluentci.io/dagger";
 import * as jobs from "./jobs.ts";
 
 const { build, test } = jobs;
