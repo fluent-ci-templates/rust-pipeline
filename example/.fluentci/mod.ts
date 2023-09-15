@@ -1,3 +1,1 @@
-import * as Dagger from "./src/dagger/index.ts";
-
-export { Dagger };
+export * from "./src/dagger/index.ts";

@@ -1,9 +1,11 @@
-import Client from "@dagger.io/dagger";
+import Client from "@fluentci.io/dagger";
 
 export enum Job {
   test = "test",
   build = "build",
 }
+
+export const exclude = ["target", ".git", ".devbox", ".fluentci"];
 
 export const test = async (
   client: Client,
@@ -15,9 +17,7 @@ export const test = async (
     .pipeline(Job.test)
     .container()
     .from("rust:latest")
-    .withDirectory("/app", context, {
-      exclude: ["target", ".git", ".devbox", ".fluentci"],
-    })
+    .withDirectory("/app", context, { exclude })
     .withWorkdir("/app")
     .withMountedCache("/app/target", client.cacheVolume("target"))
     .withMountedCache("/root/cargo/registry", client.cacheVolume("registry"))
@@ -38,9 +38,7 @@ export const build = async (
     .pipeline(Job.build)
     .container()
     .from("rust:latest")
-    .withDirectory("/app", context, {
-      exclude: ["target", ".git", ".devbox", ".fluentci"],
-    })
+    .withDirectory("/app", context, { exclude })
     .withWorkdir("/app")
     .withMountedCache("/app/target", client.cacheVolume("target"))
     .withMountedCache("/root/cargo/registry", client.cacheVolume("registry"))
