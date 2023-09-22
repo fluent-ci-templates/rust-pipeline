@@ -1,4 +1,4 @@
-import Client, { connect, uploadContext } from "@fluentci.io/dagger";
+import Client, { connect, uploadContext } from "../../deps.ts";
 import * as jobs from "./jobs.ts";
 
 const { build, test, exclude } = jobs;

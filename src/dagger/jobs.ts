@@ -1,4 +1,4 @@
-import Client from "@fluentci.io/dagger";
+import Client from "../../deps.ts";
 
 export enum Job {
   test = "test",
