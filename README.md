@@ -11,7 +11,7 @@ A ready-to-use CI/CD Pipeline for your Rust projects.
 Run the following command in your Rust Project:
 
 ```bash
-dagger run fluentci rust_pipeline
+fluentci run rust_pipeline
 ```
 
 Or if you want to run specific jobs:
