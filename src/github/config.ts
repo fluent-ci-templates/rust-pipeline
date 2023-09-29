@@ -21,7 +21,7 @@ export function generateYaml(): Workflow {
       {
         uses: "denoland/setup-deno@v1",
         with: {
-          "deno-version": "v1.36",
+          "deno-version": "v1.37",
         },
       },
       {
@@ -34,7 +34,7 @@ export function generateYaml(): Workflow {
       },
       {
         name: "Run Tests and Build",
-        run: "dagger run fluentci rust_pipeline test build",
+        run: "fluentci run rust_pipeline test build",
       },
     ],
   };

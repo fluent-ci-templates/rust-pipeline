@@ -26,7 +26,7 @@ dagger version`,
     {
       run: {
         name: "Run Dagger Pipelines",
-        command: "dagger run fluentci rust_pipeline test build",
+        command: "fluentci run rust_pipeline test build",
       },
     },
   ]);

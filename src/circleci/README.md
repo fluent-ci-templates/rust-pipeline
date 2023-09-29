@@ -34,7 +34,7 @@ jobs:
           dagger version
       - run:
           name: Upload Coverage
-          command: dagger run fluentci rust_pipeline test build
+          command: fluentci run rust_pipeline test build
     machine:
       image: ubuntu-2004:2023.07.1
 workflows:

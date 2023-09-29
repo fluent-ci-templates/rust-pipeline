@@ -25,7 +25,7 @@ export function generateYaml(): GitlabCI {
 
   const tests = new Job()
     .extends(".dagger")
-    .script("dagger run fluentci rust_pipeline test build");
+    .script("fluentci run rust_pipeline test build");
 
   return new GitlabCI()
     .addJob(".docker", docker)
