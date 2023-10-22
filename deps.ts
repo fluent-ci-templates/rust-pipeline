@@ -6,6 +6,7 @@ export {
   connect,
   uploadContext,
   CacheSharingMode,
+  Container,
 } from "https://sdk.fluentci.io/z1/mod.ts";
 export { brightGreen } from "https://deno.land/std@0.191.0/fmt/colors.ts";
 export { withDevbox } from "https://nix.fluentci.io/zenith/src/dagger/steps.ts";
