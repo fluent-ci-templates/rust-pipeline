@@ -41,7 +41,7 @@ Generated file:
 tests:
   extends: .dagger
   script:
-    - dagger run fluentci rust_pipeline test build
+    - fluentci run rust_pipeline test build
 
 ```
 

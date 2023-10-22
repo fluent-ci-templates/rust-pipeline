@@ -34,7 +34,7 @@ export function generateYaml(): Workflow {
       },
       {
         name: "Run Tests and Build",
-        run: "dagger run fluentci rust_pipeline test build",
+        run: "fluentci run rust_pipeline test build",
       },
     ],
   };

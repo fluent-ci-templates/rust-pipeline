@@ -43,7 +43,7 @@ jobs:
             sudo mv bin/dagger /usr/local/bin
             dagger version
       - name: Run Tests and Build
-        run: dagger run fluentci rust_pipeline test build
+        run: fluentci run rust_pipeline test build
 
 ```
 

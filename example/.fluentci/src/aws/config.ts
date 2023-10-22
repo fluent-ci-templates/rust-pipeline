@@ -15,7 +15,7 @@ export function generateYaml(): BuildSpec {
       ],
     })
     .phase("build", {
-      commands: ["dagger run fluentci rust_pipeline test build"],
+      commands: ["fluentci run rust_pipeline test build"],
     })
     .phase("post_build", {
       commands: ["echo Build completed on `date`"],

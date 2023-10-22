@@ -11,13 +11,13 @@ A ready-to-use CI/CD Pipeline for your Rust projects.
 Run the following command in your Rust Project:
 
 ```bash
-dagger run fluentci rust_pipeline
+fluentci run rust_pipeline
 ```
 
 Or if you want to run specific jobs:
 
 ```bash
-dagger run fluentci rust_pipeline test build
+fluentci run rust_pipeline test build
 ```
 
 
@@ -32,7 +32,7 @@ This will create a `.fluentci` folder in your project.
 Now you can run the pipeline with:
 
 ```bash
-dagger run fluentci .
+fluentci run .
 ```
 
 ## Jobs
@@ -47,8 +47,8 @@ dagger run fluentci .
 You can also use this pipeline programmatically:
 
 ```ts
-import Client, { connect } from "https://sdk.fluentci.io/v0.1.7/mod.ts";
-import { build, test } from "https://pkg.fluentci.io/rust_pipeline@v0.5.0/mod.ts";
+import Client, { connect } from "https://sdk.fluentci.io/v0.1.9/mod.ts";
+import { build, test } from "https://pkg.fluentci.io/rust_pipeline@v0.5.2/mod.ts";
 
 function pipeline(src = ".") {
   connect(async (client: Client) => {
