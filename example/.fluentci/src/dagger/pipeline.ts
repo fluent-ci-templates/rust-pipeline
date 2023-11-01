@@ -20,7 +20,7 @@ export default async function pipeline(src = ".", args: string[] = []) {
 async function runSpecificJobs(args: string[]) {
   for (const name of args) {
     // deno-lint-ignore no-explicit-any
-    const job = (jobs as any)[name];
+    const job = (jobs.runnableJobs as any)[name];
     if (!job) {
       throw new Error(`Job ${name} not found`);
     }

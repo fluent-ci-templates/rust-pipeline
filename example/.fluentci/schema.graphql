@@ -4,5 +4,7 @@
 
 type Query {
   build(src: String!): String
+  clippy(src: String!): String
+  llvmCov(src: String!): String
   test(src: String!): String
 }

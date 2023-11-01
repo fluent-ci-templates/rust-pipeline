@@ -44,6 +44,8 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 export interface NexusGenFieldTypes {
   Query: { // field return type
     build: string | null; // String
+    clippy: string | null; // String
+    llvmCov: string | null; // String
     test: string | null; // String
   }
 }
@@ -51,6 +53,8 @@ export interface NexusGenFieldTypes {
 export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     build: 'String'
+    clippy: 'String'
+    llvmCov: 'String'
     test: 'String'
   }
 }
@@ -58,6 +62,12 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Query: {
     build: { // args
+      src: string; // String!
+    }
+    clippy: { // args
+      src: string; // String!
+    }
+    llvmCov: { // args
       src: string; // String!
     }
     test: { // args
