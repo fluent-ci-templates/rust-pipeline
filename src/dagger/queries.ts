@@ -17,3 +17,9 @@ export const build = gql`
     build(src: $src)
   }
 `;
+
+export const llvmCov = gql`
+  query llvmCov($src: String!) {
+    llvmCov(src: $src)
+  }
+`;

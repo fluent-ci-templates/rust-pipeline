@@ -37,16 +37,18 @@ fluentci run .
 
 ## Jobs
 
-| Job    | Description                     |
-| ------ | ------------------------------- |
-| clippy | Run Rust Clippy on your project |
-| build  | Build your project              |
-| test   | Run your tests                  |
+| Job      | Description                     |
+| -------- | ------------------------------- |
+| clippy   | Run Rust Clippy on your project |
+| build    | Build your project              |
+| test     | Run your tests                  |
+| llvm_cov | Generate llvm coverage report   |
 
 ```graphql
 build(src: String!): String
 clippy(src: String!): String
 test(src: String!): String
+llvmCov(src: String!): String
 ```
 
 ## Programmatic usage
@@ -54,7 +56,7 @@ test(src: String!): String
 You can also use this pipeline programmatically:
 
 ```ts
-import { build, test } from "https://pkg.fluentci.io/rust_pipeline@v0.6.2/mod.ts";
+import { build, test } from "https://pkg.fluentci.io/rust_pipeline@v0.6.3/mod.ts";
 
 await test();
 await build();

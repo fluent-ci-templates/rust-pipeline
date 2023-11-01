@@ -8,7 +8,7 @@ import {
   nonNull,
 } from "../../deps.ts";
 
-import { clippy, test, build } from "./jobs.ts";
+import { clippy, test, build, llvmCov } from "./jobs.ts";
 
 const Query = queryType({
   definition(t) {
@@ -29,6 +29,12 @@ const Query = queryType({
         src: nonNull(stringArg()),
       },
       resolve: async (_root, args, _ctx) => await build(args.src),
+    });
+    t.string("llvmCov", {
+      args: {
+        src: nonNull(stringArg()),
+      },
+      resolve: async (_root, args, _ctx) => await llvmCov(args.src),
     });
   },
 });

@@ -4,6 +4,7 @@ export enum Job {
   clippy = "clippy",
   test = "test",
   build = "build",
+  llvmCov = "llvm_cov",
 }
 
 export const exclude = ["target", ".git", ".devbox", ".fluentci"];
@@ -30,11 +31,62 @@ export const clippy = async (src = ".") => {
         "cargo clippy \
         --all-features \
         --message-format=json | clippy-sarif | tee rust-clippy-results.sarif | sarif-fmt",
-      ]);
+      ])
+      .withExec(["ls", "-la", "/app"]);
 
     await ctr
       .file("/app/rust-clippy-results.sarif")
       .export("./rust-clippy-results.sarif");
+    await ctr.stdout();
+  });
+  return "Done";
+};
+
+export const llvmCov = async (src = ".") => {
+  await connect(async (client: Client) => {
+    const context = client.host().directory(src);
+    const ctr = client
+      .pipeline(Job.test)
+      .container()
+      .from("rust:1.73-bookworm")
+      .withExec(["apt-get", "update"])
+      .withExec([
+        "apt-get",
+        "install",
+        "-y",
+        "build-essential",
+        "wget",
+        "pkg-config",
+      ])
+      .withExec(["rustup", "component", "add", "llvm-tools"])
+      .withExec([
+        "wget",
+        "https://github.com/taiki-e/cargo-llvm-cov/releases/download/v0.5.36/cargo-llvm-cov-x86_64-unknown-linux-gnu.tar.gz",
+      ])
+      .withExec([
+        "tar",
+        "xvf",
+        "cargo-llvm-cov-x86_64-unknown-linux-gnu.tar.gz",
+      ])
+      .withExec(["mv", "cargo-llvm-cov", "/usr/local/bin"])
+      .withDirectory("/app", context, { exclude })
+      .withWorkdir("/app")
+      .withMountedCache("/app/target", client.cacheVolume("target"))
+      .withMountedCache("/root/cargo/registry", client.cacheVolume("registry"))
+      .withExec([
+        "sh",
+        "-c",
+        "cargo llvm-cov \
+        --all-features \
+        --lib \
+        --workspace \
+        --lcov \
+        --output-path \
+          lcov.info",
+      ])
+      .withExec(["ls", "-la", "/app"]);
+
+    await ctr.file("/app/lcov.info").export("./lcov.info");
     await ctr.stdout();
   });
   return "Done";
@@ -119,10 +171,12 @@ export const runnableJobs: Record<Job, JobExec> = {
   [Job.clippy]: clippy,
   [Job.test]: test,
   [Job.build]: build,
+  [Job.llvmCov]: llvmCov,
 };
 
 export const jobDescriptions: Record<Job, string> = {
   [Job.clippy]: "Run clippy",
   [Job.test]: "Run tests",
   [Job.build]: "Build the project",
+  [Job.llvmCov]: "Generate llvm coverage report",
 };

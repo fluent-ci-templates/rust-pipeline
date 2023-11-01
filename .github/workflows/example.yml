@@ -21,5 +21,5 @@ jobs:
           sudo mv bin/dagger /usr/local/bin
           dagger version
       - name: Run Dagger Pipelines
-        run: dagger run deno run -A ../src/dagger/runner.ts
+        run: dagger run deno run -A ../src/dagger/runner.ts clippy test llvm_cov build
         working-directory: example
