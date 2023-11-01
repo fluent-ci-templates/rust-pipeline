@@ -8,10 +8,16 @@ import {
   nonNull,
 } from "../../deps.ts";
 
-import { test, build } from "./jobs.ts";
+import { clippy, test, build } from "./jobs.ts";
 
 const Query = queryType({
   definition(t) {
+    t.string("clippy", {
+      args: {
+        src: nonNull(stringArg()),
+      },
+      resolve: async (_root, args, _ctx) => await clippy(args.src),
+    });
     t.string("test", {
       args: {
         src: nonNull(stringArg()),
