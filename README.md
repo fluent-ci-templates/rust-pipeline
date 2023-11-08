@@ -56,7 +56,7 @@ llvmCov(src: String!): String
 You can also use this pipeline programmatically:
 
 ```ts
-import { build, test } from "https://pkg.fluentci.io/rust_pipeline@v0.6.3/mod.ts";
+import { build, test } from "https://pkg.fluentci.io/rust_pipeline@v0.7.0/mod.ts";
 
 await test();
 await build();
