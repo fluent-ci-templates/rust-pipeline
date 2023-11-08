@@ -27,6 +27,8 @@ export {
   join,
   resolve,
 } from "https://deno.land/std@0.203.0/path/mod.ts";
+export { parse } from "https://deno.land/std@0.205.0/flags/mod.ts";
+export { snakeCase, camelCase } from "https://cdn.skypack.dev/lodash";
 
 export * as FluentGitlabCI from "https://deno.land/x/fluent_gitlab_ci@v0.4.2/mod.ts";
 export * as FluentGithubActions from "https://deno.land/x/fluent_github_actions@v0.2.1/mod.ts";
