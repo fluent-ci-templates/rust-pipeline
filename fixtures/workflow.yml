@@ -11,6 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup Fluent CI
-        uses: fluentci-io/setup-fluentci@v1
+        uses: fluentci-io/setup-fluentci@v2
       - name: Run Tests and Build
         run: fluentci run rust_pipeline test build

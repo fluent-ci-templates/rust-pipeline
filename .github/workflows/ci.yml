@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup Fluent CI CLI
-        uses: fluentci-io/setup-fluentci@v1
+        uses: fluentci-io/setup-fluentci@v2
       - name: Run Dagger Pipelines
         run: fluentci run . fmt lint test
       - name: Upload to Codecov
