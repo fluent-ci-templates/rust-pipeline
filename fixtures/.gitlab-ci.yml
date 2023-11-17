@@ -25,3 +25,4 @@ tests:
   extends: .dagger
   script:
     - fluentci run rust_pipeline test build
+
