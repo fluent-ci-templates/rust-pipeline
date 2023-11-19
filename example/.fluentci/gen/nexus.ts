@@ -62,16 +62,18 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Query: {
     build: { // args
-      src: string; // String!
+      packageName?: string | null; // String
+      src?: string | null; // String
+      target?: string | null; // String
     }
     clippy: { // args
-      src: string; // String!
+      src?: string | null; // String
     }
     llvmCov: { // args
-      src: string; // String!
+      src?: string | null; // String
     }
     test: { // args
-      src: string; // String!
+      src?: string | null; // String
     }
   }
 }

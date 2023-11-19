@@ -5,7 +5,6 @@ import {
   join,
   resolve,
   stringArg,
-  nonNull,
 } from "../../deps.ts";
 
 import { clippy, test, build, llvmCov } from "./jobs.ts";
@@ -14,27 +13,35 @@ const Query = queryType({
   definition(t) {
     t.string("clippy", {
       args: {
-        src: nonNull(stringArg()),
+        src: stringArg(),
       },
-      resolve: async (_root, args, _ctx) => await clippy(args.src),
+      resolve: async (_root, args, _ctx) => await clippy(args.src || undefined),
     });
     t.string("test", {
       args: {
-        src: nonNull(stringArg()),
+        src: stringArg(),
       },
-      resolve: async (_root, args, _ctx) => await test(args.src),
+      resolve: async (_root, args, _ctx) => await test(args.src || undefined),
     });
     t.string("build", {
       args: {
-        src: nonNull(stringArg()),
+        src: stringArg(),
+        packageName: stringArg(),
+        target: stringArg(),
       },
-      resolve: async (_root, args, _ctx) => await build(args.src),
+      resolve: async (_root, args, _ctx) =>
+        await build(
+          args.src || undefined,
+          args.packageName || undefined,
+          args.target || undefined
+        ),
     });
     t.string("llvmCov", {
       args: {
-        src: nonNull(stringArg()),
+        src: stringArg(),
       },
-      resolve: async (_root, args, _ctx) => await llvmCov(args.src),
+      resolve: async (_root, args, _ctx) =>
+        await llvmCov(args.src || undefined),
     });
   },
 });

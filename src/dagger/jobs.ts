@@ -1,4 +1,5 @@
-import Client, { connect } from "../../deps.ts";
+import Client from "../../deps.ts";
+import { connect } from "../../sdk/connect.ts";
 
 export enum Job {
   clippy = "clippy",

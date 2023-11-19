@@ -45,10 +45,10 @@ fluentci run .
 | llvm_cov | Generate llvm coverage report   |
 
 ```graphql
-build(src: String!): String
-clippy(src: String!): String
-test(src: String!): String
-llvmCov(src: String!): String
+build(packageName: String, src: String, target: String): String
+clippy(src: String): String
+test(src: String): String
+llvmCov(src: String): String
 ```
 
 ## Programmatic usage
