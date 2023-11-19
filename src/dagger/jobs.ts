@@ -1,4 +1,5 @@
 import Client from "../../deps.ts";
+import { Directory, DirectoryID } from "../../sdk/client.gen.ts";
 import { connect } from "../../sdk/connect.ts";
 
 export enum Job {
@@ -10,9 +11,21 @@ export enum Job {
 
 export const exclude = ["target", ".git", ".devbox", ".fluentci"];
 
-export const clippy = async (src = ".") => {
+const getDirectory = (
+  client: Client,
+  src: string | Directory | undefined = "."
+) => {
+  if (typeof src === "string" && src.startsWith("core.Directory")) {
+    return client.directory({
+      id: src as DirectoryID,
+    });
+  }
+  return src instanceof Directory ? src : client.host().directory(src);
+};
+
+export const clippy = async (src: string | Directory | undefined = ".") => {
   await connect(async (client: Client) => {
-    const context = client.host().directory(src);
+    const context = getDirectory(client, src);
     const ctr = client
       .pipeline(Job.test)
       .container()
@@ -43,9 +56,9 @@ export const clippy = async (src = ".") => {
   return "Done";
 };
 
-export const llvmCov = async (src = ".") => {
+export const llvmCov = async (src: string | Directory | undefined = ".") => {
   await connect(async (client: Client) => {
-    const context = client.host().directory(src);
+    const context = getDirectory(client, src);
     const ctr = client
       .pipeline(Job.test)
       .container()
@@ -93,9 +106,12 @@ export const llvmCov = async (src = ".") => {
   return "Done";
 };
 
-export const test = async (src = ".", options: string[] = []) => {
+export const test = async (
+  src: string | Directory | undefined = ".",
+  options: string[] = []
+) => {
   await connect(async (client: Client) => {
-    const context = client.host().directory(src);
+    const context = getDirectory(client, src);
     const ctr = client
       .pipeline(Job.test)
       .container()
@@ -114,13 +130,13 @@ export const test = async (src = ".", options: string[] = []) => {
 };
 
 export const build = async (
-  src = ".",
+  src: string | Directory | undefined = ".",
   packageName?: string,
   target = "x86_64-unknown-linux-gnu",
   options: string[] = []
 ) => {
   await connect(async (client: Client) => {
-    const context = client.host().directory(src);
+    const context = getDirectory(client, src);
     const ctr = client
       .pipeline(Job.build)
       .container()

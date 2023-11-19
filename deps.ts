@@ -16,6 +16,8 @@ export {
   intArg,
   nonNull,
   makeSchema,
+  enumType,
+  inputObjectType,
 } from "npm:nexus";
 export {
   dirname,
