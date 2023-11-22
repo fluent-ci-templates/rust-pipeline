@@ -21,4 +21,5 @@ jobs:
           dagger query --doc test.gql
           dagger query --doc llvm_cov.gql
           dagger query --doc build.gql
+          dagger query --doc clippy.gql
         working-directory: example

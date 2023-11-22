@@ -59,6 +59,9 @@ schema.description = JSON.stringify({
   "test.src": "directory",
   "build.src": "directory",
   "llvmCov.src": "directory",
+  clippy: "file",
+  llvmCov: "file",
+  build: "directory",
 });
 
 export { schema };
