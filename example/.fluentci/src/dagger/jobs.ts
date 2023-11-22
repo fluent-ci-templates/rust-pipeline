@@ -24,6 +24,7 @@ const getDirectory = (
 };
 
 export const clippy = async (src: string | Directory | undefined = ".") => {
+  let id = "";
   await connect(async (client: Client) => {
     const context = getDirectory(client, src);
     const ctr = client
@@ -48,15 +49,16 @@ export const clippy = async (src: string | Directory | undefined = ".") => {
       ])
       .withExec(["ls", "-la", "/app"]);
 
-    await ctr
-      .file("/app/rust-clippy-results.sarif")
-      .export("./rust-clippy-results.sarif");
+    const results = await ctr.file("/app/rust-clippy-results.sarif");
+    results.export("./rust-clippy-results.sarif");
     await ctr.stdout();
+    id = await results.id();
   });
-  return "Done";
+  return id;
 };
 
 export const llvmCov = async (src: string | Directory | undefined = ".") => {
+  let id = "";
   await connect(async (client: Client) => {
     const context = getDirectory(client, src);
     const ctr = client
@@ -100,10 +102,12 @@ export const llvmCov = async (src: string | Directory | undefined = ".") => {
       ])
       .withExec(["ls", "-la", "/app"]);
 
-    await ctr.file("/app/lcov.info").export("./lcov.info");
+    const lcov = ctr.file("/app/lcov.info");
+    await lcov.export("./lcov.info");
     await ctr.stdout();
+    id = await lcov.id();
   });
-  return "Done";
+  return id;
 };
 
 export const test = async (
@@ -126,7 +130,7 @@ export const test = async (
 
     console.log(result);
   });
-  return "done";
+  return "Done";
 };
 
 export const build = async (
@@ -135,6 +139,7 @@ export const build = async (
   target = "x86_64-unknown-linux-gnu",
   options: string[] = []
 ) => {
+  let id = "";
   await connect(async (client: Client) => {
     const context = getDirectory(client, src);
     const ctr = client
@@ -163,8 +168,9 @@ export const build = async (
     const result = await ctr.stdout();
 
     console.log(result);
+    id = await ctr.directory("/app/target").id();
   });
-  return "done";
+  return id;
 };
 
 export type JobExec = (src?: string) =>
