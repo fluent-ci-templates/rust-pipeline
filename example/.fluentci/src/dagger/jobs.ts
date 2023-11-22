@@ -163,12 +163,13 @@ export const build = async (
               ...options,
             ]
           : ["cargo", "build", "--release", "--target", target, ...options]
-      );
+      )
+      .withExec(["cp", "-r", `/app/target/${target}`, "/"]);
 
     const result = await ctr.stdout();
 
     console.log(result);
-    id = await ctr.directory("/app/target").id();
+    id = await ctr.directory(`/${target}`).id();
   });
   return id;
 };

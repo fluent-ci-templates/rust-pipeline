@@ -28,7 +28,7 @@ export const clippy = async (src: string | Directory | undefined = ".") => {
   await connect(async (client: Client) => {
     const context = getDirectory(client, src);
     const ctr = client
-      .pipeline(Job.test)
+      .pipeline(Job.clippy)
       .container()
       .from("rust:1.73-bookworm")
       .withExec(["apt-get", "update"])
@@ -62,7 +62,7 @@ export const llvmCov = async (src: string | Directory | undefined = ".") => {
   await connect(async (client: Client) => {
     const context = getDirectory(client, src);
     const ctr = client
-      .pipeline(Job.test)
+      .pipeline(Job.llvmCov)
       .container()
       .from("rust:1.73-bookworm")
       .withExec(["apt-get", "update"])
@@ -163,12 +163,13 @@ export const build = async (
               ...options,
             ]
           : ["cargo", "build", "--release", "--target", target, ...options]
-      );
+      )
+      .withExec(["cp", "-r", `/app/target/${target}`, "/"]);
 
     const result = await ctr.stdout();
 
     console.log(result);
-    id = await ctr.directory("/app/target").id();
+    id = await ctr.directory(`/${target}`).id();
   });
   return id;
 };
