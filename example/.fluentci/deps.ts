@@ -9,15 +9,6 @@ export { stringifyTree } from "https://esm.sh/stringify-tree@1.1.1";
 import gql from "https://esm.sh/graphql-tag@2.12.6";
 export { gql };
 export {
-  arg,
-  queryType,
-  stringArg,
-  booleanArg,
-  intArg,
-  nonNull,
-  makeSchema,
-} from "npm:nexus";
-export {
   dirname,
   join,
   resolve,

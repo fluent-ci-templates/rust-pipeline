@@ -1,5 +1,5 @@
 import Client from "../../deps.ts";
-import { Directory, DirectoryID } from "../../sdk/client.gen.ts";
+import { Directory, DirectoryID, File } from "../../sdk/client.gen.ts";
 import { connect } from "../../sdk/connect.ts";
 
 export enum Job {
@@ -23,7 +23,15 @@ const getDirectory = (
   return src instanceof Directory ? src : client.host().directory(src);
 };
 
-export const clippy = async (src: string | Directory | undefined = ".") => {
+/**
+ * @function
+ * @description Run clippy
+ * @param {string | Directory | undefined} src
+ * @returns {string}
+ */
+export async function clippy(
+  src: string | Directory | undefined = "."
+): Promise<File | string> {
   let id = "";
   await connect(async (client: Client) => {
     const context = getDirectory(client, src);
@@ -55,9 +63,17 @@ export const clippy = async (src: string | Directory | undefined = ".") => {
     id = await results.id();
   });
   return id;
-};
+}
 
-export const llvmCov = async (src: string | Directory | undefined = ".") => {
+/**
+ * @function
+ * @description Generate llvm coverage report
+ * @param {string | Directory | undefined} src
+ * @returns {string}
+ */
+export async function llvmCov(
+  src: string | Directory | undefined = "."
+): Promise<File | string> {
   let id = "";
   await connect(async (client: Client) => {
     const context = getDirectory(client, src);
@@ -108,12 +124,19 @@ export const llvmCov = async (src: string | Directory | undefined = ".") => {
     id = await lcov.id();
   });
   return id;
-};
+}
 
-export const test = async (
+/**
+ * @function
+ * @description Run tests
+ * @param {string | Directory | undefined} src
+ * @param {string[]} options
+ * @returns {string}
+ */
+export async function test(
   src: string | Directory | undefined = ".",
   options: string[] = []
-) => {
+): Promise<string> {
   await connect(async (client: Client) => {
     const context = getDirectory(client, src);
     const ctr = client
@@ -131,14 +154,23 @@ export const test = async (
     console.log(result);
   });
   return "Done";
-};
+}
 
-export const build = async (
+/**
+ * @function
+ * @description Build the project
+ * @param {string | Directory | undefined} src
+ * @param {string} packageName
+ * @param {string} target
+ * @param {string[]} options
+ * @returns {string}
+ */
+export async function build(
   src: string | Directory | undefined = ".",
   packageName?: string,
   target = "x86_64-unknown-linux-gnu",
   options: string[] = []
-) => {
+): Promise<Directory | string> {
   let id = "";
   await connect(async (client: Client) => {
     const context = getDirectory(client, src);
@@ -172,24 +204,12 @@ export const build = async (
     id = await ctr.directory(`/${target}`).id();
   });
   return id;
-};
+}
 
-export type JobExec = (src?: string) =>
-  | Promise<string>
-  | ((
-      src?: string,
-      packageName?: string,
-      target?: string,
-      options?: {
-        ignore: string[];
-      }
-    ) => Promise<string>)
-  | ((
-      src?: string,
-      options?: {
-        ignore: string[];
-      }
-    ) => Promise<string>);
+export type JobExec =
+  | ((src?: string | Directory | undefined) => Promise<Directory | string>)
+  | ((src?: string | Directory | undefined) => Promise<File | string>)
+  | ((src?: string | Directory | undefined) => Promise<string>);
 
 export const runnableJobs: Record<Job, JobExec> = {
   [Job.clippy]: clippy,
