@@ -52,18 +52,26 @@ dagger mod install github.com/fluent-ci-templates/rust-pipeline@mod
 | test     | Run your tests                  |
 | llvm_cov | Generate llvm coverage report   |
 
-```graphql
+```typescript
 build(
-  packageName: String, 
-  src: String, 
-  target: String
-): String
+  src: string | Directory | undefined = ".",
+  packageName?: string,
+  target = "x86_64-unknown-linux-gnu",
+  options: string[] = []
+): Promise<Directory | string>
 
-clippy(src: String): String
+clippy(
+  src: string | Directory | undefined = "."
+): Promise<File | string>
 
-test(src: String): String
+test(
+  src: string | Directory | undefined = ".",
+  options: string[] = []
+): Promise<string>
 
-llvmCov(src: String): String
+llvmCov(
+  src: string | Directory | undefined = "."
+): Promise<File | string>
 ```
 
 ## Programmatic usage
@@ -71,7 +79,7 @@ llvmCov(src: String): String
 You can also use this pipeline programmatically:
 
 ```ts
-import { build, test } from "https://pkg.fluentci.io/rust_pipeline@v0.8.0/mod.ts";
+import { build, test } from "https://pkg.fluentci.io/rust_pipeline@v0.8.1/mod.ts";
 
 await test();
 await build();
