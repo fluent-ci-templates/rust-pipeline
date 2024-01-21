@@ -6,6 +6,9 @@
 [![](https://img.shields.io/codecov/c/gh/fluent-ci-templates/rust-pipeline)](https://codecov.io/gh/fluent-ci-templates/rust-pipeline)
 
 A ready-to-use CI/CD Pipeline for your Rust projects.
+
+![Made with VHS](https://vhs.charm.sh/vhs-f5jk3sceXQrc55XC4fW3c.gif)
+
 ## 🚀 Usage
 
 Run the following command in your Rust Project:
@@ -79,7 +82,7 @@ llvmCov(
 You can also use this pipeline programmatically:
 
 ```ts
-import { build, test } from "https://pkg.fluentci.io/rust_pipeline@v0.8.1/mod.ts";
+import { build, test } from "https://pkg.fluentci.io/rust_pipeline@v0.8.2/mod.ts";
 
 await test();
 await build();
