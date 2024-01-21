@@ -1,5 +1,4 @@
-import Client from "../../deps.ts";
-import { Directory, DirectoryID, File } from "../../sdk/client.gen.ts";
+import { Directory, DirectoryID, File, Client } from "../../sdk/client.gen.ts";
 import { connect } from "../../sdk/connect.ts";
 
 export enum Job {
