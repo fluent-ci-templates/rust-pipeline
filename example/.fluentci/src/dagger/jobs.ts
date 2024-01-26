@@ -10,14 +10,18 @@ export enum Job {
 
 export const exclude = ["target", ".git", ".devbox", ".fluentci"];
 
-const getDirectory = (
+const getDirectory = async (
   client: Client,
   src: string | Directory | undefined = "."
 ) => {
-  if (typeof src === "string" && src.startsWith("core.Directory")) {
-    return client.directory({
-      id: src as DirectoryID,
-    });
+  if (typeof src === "string") {
+    try {
+      const directory = client.loadDirectoryFromID(src as DirectoryID);
+      await directory.id();
+      return directory;
+    } catch (_) {
+      return client.host().directory(src);
+    }
   }
   return src instanceof Directory ? src : client.host().directory(src);
 };
@@ -33,7 +37,7 @@ export async function clippy(
 ): Promise<File | string> {
   let id = "";
   await connect(async (client: Client) => {
-    const context = getDirectory(client, src);
+    const context = await getDirectory(client, src);
     const ctr = client
       .pipeline(Job.clippy)
       .container()
@@ -75,7 +79,7 @@ export async function llvmCov(
 ): Promise<File | string> {
   let id = "";
   await connect(async (client: Client) => {
-    const context = getDirectory(client, src);
+    const context = await getDirectory(client, src);
     const ctr = client
       .pipeline(Job.llvmCov)
       .container()
@@ -137,7 +141,7 @@ export async function test(
   options: string[] = []
 ): Promise<string> {
   await connect(async (client: Client) => {
-    const context = getDirectory(client, src);
+    const context = await getDirectory(client, src);
     const ctr = client
       .pipeline(Job.test)
       .container()
@@ -172,7 +176,7 @@ export async function build(
 ): Promise<Directory | string> {
   let id = "";
   await connect(async (client: Client) => {
-    const context = getDirectory(client, src);
+    const context = await getDirectory(client, src);
     const ctr = client
       .pipeline(Job.build)
       .container()
