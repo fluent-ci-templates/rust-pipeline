@@ -18,8 +18,8 @@ jobs:
           dagger version
       - name: Run Dagger Pipelines
         run: |
-          dagger query --doc test.gql
-          dagger query --doc llvm_cov.gql
-          dagger query --doc build.gql
-          dagger query --doc clippy.gql
+          dagger call test --src .
+          dagger call llvm-cov --src .
+          dagger call build --src .
+          dagger call clippy --src .
         working-directory: example
