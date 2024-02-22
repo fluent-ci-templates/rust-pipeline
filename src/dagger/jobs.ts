@@ -1,3 +1,8 @@
+/**
+ * @module rust
+ * @description This module provides a set of functions to build, test, and run clippy on a Rust project 🦀
+ */
+
 import { Directory, DirectoryID, File, Client } from "../../sdk/client.gen.ts";
 import { connect } from "../../sdk/connect.ts";
 
