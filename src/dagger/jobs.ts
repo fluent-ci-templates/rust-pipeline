@@ -3,8 +3,7 @@
  * @description This module provides a set of functions to build, test, and run clippy on a Rust project 🦀
  */
 
-import { Directory, DirectoryID, File, Client } from "../../sdk/client.gen.ts";
-import { connect } from "../../sdk/connect.ts";
+import { dag, Directory, DirectoryID, File } from "../../sdk/client.gen.ts";
 
 export enum Job {
   clippy = "clippy",
@@ -16,7 +15,6 @@ export enum Job {
 export const exclude = ["target", ".git", ".devbox", ".fluentci"];
 
 export const getDirectory = async (
-  client: Client,
   src: string | Directory | undefined = "."
 ) => {
   if (src instanceof Directory) {
@@ -24,21 +22,23 @@ export const getDirectory = async (
   }
   if (typeof src === "string") {
     try {
-      const directory = client.loadDirectoryFromID(src as DirectoryID);
+      const directory = dag.loadDirectoryFromID(src as DirectoryID);
       await directory.id();
       return directory;
     } catch (_) {
-      return client.host
-        ? client.host().directory(src)
-        : client.currentModule().source().directory(src);
+      return dag.host
+        ? dag.host().directory(src)
+        : dag.currentModule().source().directory(src);
     }
   }
-  return client.host
-    ? client.host().directory(src)
-    : client.currentModule().source().directory(src);
+  return dag.host
+    ? dag.host().directory(src)
+    : dag.currentModule().source().directory(src);
 };
 
 /**
+ * Run clippy
+ *
  * @function
  * @description Run clippy
  * @param {string | Directory | undefined} src
@@ -47,40 +47,38 @@ export const getDirectory = async (
 export async function clippy(
   src: string | Directory | undefined = "."
 ): Promise<File | string> {
-  let id = "";
-  await connect(async (client: Client) => {
-    const context = await getDirectory(client, src);
-    const ctr = client
-      .pipeline(Job.clippy)
-      .container()
-      .from("rust:1.73-bookworm")
-      .withExec(["apt-get", "update"])
-      .withExec(["apt-get", "install", "-y", "build-essential", "pkg-config"])
-      .withExec(["rustup", "component", "add", "clippy"])
-      .withExec(["cargo", "install", "clippy-sarif", "--version", "0.3.0"])
-      .withExec(["cargo", "install", "sarif-fmt", "--version", "0.3.0"])
-      .withDirectory("/app", context, { exclude })
-      .withWorkdir("/app")
-      .withMountedCache("/app/target", client.cacheVolume("target"))
-      .withMountedCache("/root/cargo/registry", client.cacheVolume("registry"))
-      .withExec([
-        "sh",
-        "-c",
-        "cargo clippy \
+  const context = await getDirectory(src);
+  const ctr = dag
+    .pipeline(Job.clippy)
+    .container()
+    .from("rust:1.73-bookworm")
+    .withExec(["apt-get", "update"])
+    .withExec(["apt-get", "install", "-y", "build-essential", "pkg-config"])
+    .withExec(["rustup", "component", "add", "clippy"])
+    .withExec(["cargo", "install", "clippy-sarif", "--version", "0.3.0"])
+    .withExec(["cargo", "install", "sarif-fmt", "--version", "0.3.0"])
+    .withDirectory("/app", context, { exclude })
+    .withWorkdir("/app")
+    .withMountedCache("/app/target", dag.cacheVolume("target"))
+    .withMountedCache("/root/cargo/registry", dag.cacheVolume("registry"))
+    .withExec([
+      "sh",
+      "-c",
+      "cargo clippy \
         --all-features \
         --message-format=json | clippy-sarif | tee rust-clippy-results.sarif | sarif-fmt",
-      ])
-      .withExec(["ls", "-la", "/app"]);
+    ])
+    .withExec(["ls", "-la", "/app"]);
 
-    const results = await ctr.file("/app/rust-clippy-results.sarif");
-    results.export("./rust-clippy-results.sarif");
-    await ctr.stdout();
-    id = await results.id();
-  });
-  return id;
+  const results = await ctr.file("/app/rust-clippy-results.sarif");
+  results.export("./rust-clippy-results.sarif");
+  await ctr.stdout();
+  return results.id();
 }
 
 /**
+ * Generate llvm coverage report
+ *
  * @function
  * @description Generate llvm coverage report
  * @param {string | Directory | undefined} src
@@ -89,59 +87,53 @@ export async function clippy(
 export async function llvmCov(
   src: string | Directory | undefined = "."
 ): Promise<File | string> {
-  let id = "";
-  await connect(async (client: Client) => {
-    const context = await getDirectory(client, src);
-    const ctr = client
-      .pipeline(Job.llvmCov)
-      .container()
-      .from("rust:1.73-bookworm")
-      .withExec(["apt-get", "update"])
-      .withExec([
-        "apt-get",
-        "install",
-        "-y",
-        "build-essential",
-        "wget",
-        "pkg-config",
-      ])
-      .withExec(["rustup", "component", "add", "llvm-tools"])
-      .withExec([
-        "wget",
-        "https://github.com/taiki-e/cargo-llvm-cov/releases/download/v0.5.36/cargo-llvm-cov-x86_64-unknown-linux-gnu.tar.gz",
-      ])
-      .withExec([
-        "tar",
-        "xvf",
-        "cargo-llvm-cov-x86_64-unknown-linux-gnu.tar.gz",
-      ])
-      .withExec(["mv", "cargo-llvm-cov", "/usr/local/bin"])
-      .withDirectory("/app", context, { exclude })
-      .withWorkdir("/app")
-      .withMountedCache("/app/target", client.cacheVolume("target"))
-      .withMountedCache("/root/cargo/registry", client.cacheVolume("registry"))
-      .withExec([
-        "sh",
-        "-c",
-        "cargo llvm-cov \
+  const context = await getDirectory(src);
+  const ctr = dag
+    .pipeline(Job.llvmCov)
+    .container()
+    .from("rust:1.73-bookworm")
+    .withExec(["apt-get", "update"])
+    .withExec([
+      "apt-get",
+      "install",
+      "-y",
+      "build-essential",
+      "wget",
+      "pkg-config",
+    ])
+    .withExec(["rustup", "component", "add", "llvm-tools"])
+    .withExec([
+      "wget",
+      "https://github.com/taiki-e/cargo-llvm-cov/releases/download/v0.5.36/cargo-llvm-cov-x86_64-unknown-linux-gnu.tar.gz",
+    ])
+    .withExec(["tar", "xvf", "cargo-llvm-cov-x86_64-unknown-linux-gnu.tar.gz"])
+    .withExec(["mv", "cargo-llvm-cov", "/usr/local/bin"])
+    .withDirectory("/app", context, { exclude })
+    .withWorkdir("/app")
+    .withMountedCache("/app/target", dag.cacheVolume("target"))
+    .withMountedCache("/root/cargo/registry", dag.cacheVolume("registry"))
+    .withExec([
+      "sh",
+      "-c",
+      "cargo llvm-cov \
         --all-features \
         --lib \
         --workspace \
         --lcov \
         --output-path \
           lcov.info",
-      ])
-      .withExec(["ls", "-la", "/app"]);
+    ])
+    .withExec(["ls", "-la", "/app"]);
 
-    const lcov = ctr.file("/app/lcov.info");
-    await lcov.export("./lcov.info");
-    await ctr.stdout();
-    id = await lcov.id();
-  });
-  return id;
+  const lcov = ctr.file("/app/lcov.info");
+  await lcov.export("./lcov.info");
+  await ctr.stdout();
+  return lcov.id();
 }
 
 /**
+ * Run tests
+ *
  * @function
  * @description Run tests
  * @param {string | Directory | undefined} src
@@ -152,26 +144,23 @@ export async function test(
   src: string | Directory | undefined = ".",
   options: string[] = []
 ): Promise<string> {
-  await connect(async (client: Client) => {
-    const context = await getDirectory(client, src);
-    const ctr = client
-      .pipeline(Job.test)
-      .container()
-      .from("rust:latest")
-      .withDirectory("/app", context, { exclude })
-      .withWorkdir("/app")
-      .withMountedCache("/app/target", client.cacheVolume("target"))
-      .withMountedCache("/root/cargo/registry", client.cacheVolume("registry"))
-      .withExec(["cargo", "test", ...options]);
+  const context = await getDirectory(src);
+  const ctr = dag
+    .pipeline(Job.test)
+    .container()
+    .from("rust:latest")
+    .withDirectory("/app", context, { exclude })
+    .withWorkdir("/app")
+    .withMountedCache("/app/target", dag.cacheVolume("target"))
+    .withMountedCache("/root/cargo/registry", dag.cacheVolume("registry"))
+    .withExec(["cargo", "test", ...options]);
 
-    const result = await ctr.stdout();
-
-    console.log(result);
-  });
-  return "Done";
+  return ctr.stdout();
 }
 
 /**
+ * Build the project
+ *
  * @function
  * @description Build the project
  * @param {string | Directory | undefined} src
@@ -186,39 +175,35 @@ export async function build(
   target = "x86_64-unknown-linux-gnu",
   options: string[] = []
 ): Promise<Directory | string> {
-  let id = "";
-  await connect(async (client: Client) => {
-    const context = await getDirectory(client, src);
-    const ctr = client
-      .pipeline(Job.build)
-      .container()
-      .from("rust:latest")
-      .withDirectory("/app", context, { exclude })
-      .withWorkdir("/app")
-      .withMountedCache("/app/target", client.cacheVolume("target"))
-      .withMountedCache("/root/cargo/registry", client.cacheVolume("registry"))
-      .withExec(
-        packageName
-          ? [
-              "cargo",
-              "build",
-              "--release",
-              "-p",
-              packageName,
-              "--target",
-              target,
-              ...options,
-            ]
-          : ["cargo", "build", "--release", "--target", target, ...options]
-      )
-      .withExec(["cp", "-r", `/app/target/${target}`, "/"]);
+  const context = await getDirectory(src);
+  const ctr = dag
+    .pipeline(Job.build)
+    .container()
+    .from("rust:latest")
+    .withDirectory("/app", context, { exclude })
+    .withWorkdir("/app")
+    .withMountedCache("/app/target", dag.cacheVolume("target"))
+    .withMountedCache("/root/cargo/registry", dag.cacheVolume("registry"))
+    .withExec(
+      packageName
+        ? [
+            "cargo",
+            "build",
+            "--release",
+            "-p",
+            packageName,
+            "--target",
+            target,
+            ...options,
+          ]
+        : ["cargo", "build", "--release", "--target", target, ...options]
+    )
+    .withExec(["cp", "-r", `/app/target/${target}`, "/"]);
 
-    const result = await ctr.stdout();
+  const result = await ctr.stdout();
 
-    console.log(result);
-    id = await ctr.directory(`/${target}`).id();
-  });
-  return id;
+  console.log(result);
+  return ctr.directory(`/${target}`).id();
 }
 
 export type JobExec =

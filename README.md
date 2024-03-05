@@ -4,6 +4,8 @@
 [![deno module](https://shield.deno.dev/x/rust_pipeline)](https://deno.land/x/rust_pipeline)
 ![deno compatibility](https://shield.deno.dev/deno/^1.37)
 [![](https://img.shields.io/codecov/c/gh/fluent-ci-templates/rust-pipeline)](https://codecov.io/gh/fluent-ci-templates/rust-pipeline)
+[![](https://jsr.io/badges/@fluentci/rust)](https://jsr.io/@fluentci/rust)
+
 
 A ready-to-use CI/CD Pipeline for your Rust projects.
 
@@ -82,7 +84,7 @@ llvmCov(
 You can also use this pipeline programmatically:
 
 ```ts
-import { build, test } from "https://pkg.fluentci.io/rust_pipeline@v0.8.4/mod.ts";
+import { build, test } from "jsr:@fluentci/rust";
 
 await test();
 await build();

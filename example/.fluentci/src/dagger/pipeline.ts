@@ -1,6 +1,6 @@
 import * as jobs from "./jobs.ts";
 
-const { build, test, exclude } = jobs;
+const { build, test } = jobs;
 
 export default async function pipeline(src = ".", args: string[] = []) {
   if (args.length > 0) {
