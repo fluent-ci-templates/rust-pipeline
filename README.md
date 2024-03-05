@@ -3,8 +3,8 @@
 [![fluentci pipeline](https://img.shields.io/badge/dynamic/json?label=pkg.fluentci.io&labelColor=%23000&color=%23460cf1&url=https%3A%2F%2Fapi.fluentci.io%2Fv1%2Fpipeline%2Frust_pipeline&query=%24.version)](https://pkg.fluentci.io/rust_pipeline)
 [![deno module](https://shield.deno.dev/x/rust_pipeline)](https://deno.land/x/rust_pipeline)
 ![deno compatibility](https://shield.deno.dev/deno/^1.37)
-[![](https://img.shields.io/codecov/c/gh/fluent-ci-templates/rust-pipeline)](https://codecov.io/gh/fluent-ci-templates/rust-pipeline)
 [![](https://jsr.io/badges/@fluentci/rust)](https://jsr.io/@fluentci/rust)
+[![](https://img.shields.io/codecov/c/gh/fluent-ci-templates/rust-pipeline)](https://codecov.io/gh/fluent-ci-templates/rust-pipeline)
 
 
 A ready-to-use CI/CD Pipeline for your Rust projects.
@@ -40,15 +40,24 @@ Now you can run the pipeline with:
 fluentci run .
 ```
 
-## Dagger Module
+## 🧩 Dagger Module
 
 Use as a [Dagger](https://dagger.io) Module:
 
 ```bash
-dagger mod install github.com/fluent-ci-templates/rust-pipeline@mod
+dagger install github.com/fluent-ci-templates/rust-pipeline@main
 ```
 
-## Jobs
+Call a function from the module:
+
+```bash
+dagger call clippy --src .
+dagger call test --src .
+dagger call llvm-cov --src .
+dagger call build --src .
+```
+
+## ✨ Jobs
 
 | Job      | Description                     |
 | -------- | ------------------------------- |
@@ -79,7 +88,7 @@ llvmCov(
 ): Promise<File | string>
 ```
 
-## Programmatic usage
+## 👨‍💻 Programmatic usage
 
 You can also use this pipeline programmatically:
 
