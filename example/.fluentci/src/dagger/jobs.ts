@@ -3,7 +3,7 @@
  * @description This module provides a set of functions to build, test, and run clippy on a Rust project 🦀
  */
 
-import { dag, Directory, DirectoryID, File } from "../../sdk/client.gen.ts";
+import { dag, env, Directory, DirectoryID, File } from "../../deps.ts";
 
 export enum Job {
   clippy = "clippy",
@@ -185,13 +185,13 @@ export async function build(
     .withMountedCache("/app/target", dag.cacheVolume("target"))
     .withMountedCache("/root/cargo/registry", dag.cacheVolume("registry"))
     .withExec(
-      packageName
+      env.has("PACKAGE_NAME") || packageName
         ? [
             "cargo",
             "build",
             "--release",
             "-p",
-            packageName,
+            env.get("PACKAGE_NAME") || packageName!,
             "--target",
             target,
             ...options,
@@ -203,6 +203,7 @@ export async function build(
   const result = await ctr.stdout();
 
   console.log(result);
+  await ctr.directory(`/${target}`).export("./target");
   return ctr.directory(`/${target}`).id();
 }
 
