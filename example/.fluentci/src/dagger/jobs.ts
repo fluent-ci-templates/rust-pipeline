@@ -180,8 +180,24 @@ export async function build(
     .pipeline(Job.build)
     .container()
     .from("rust:latest")
+    .withExec([
+      "wget",
+      "https://github.com/mozilla/sccache/releases/download/v0.7.7/sccache-v0.7.7-x86_64-unknown-linux-musl.tar.gz",
+    ])
+    .withExec([
+      "tar",
+      "-xvf",
+      "sccache-v0.7.7-x86_64-unknown-linux-musl.tar.gz",
+    ])
+    .withExec([
+      "mv",
+      "sccache-v0.7.7-x86_64-unknown-linux-musl/sccache",
+      "/usr/local/bin",
+    ])
+    .withEnvVariable("RUSTC_WRAPPER", "/usr/local/bin/sccache")
     .withDirectory("/app", context, { exclude })
     .withWorkdir("/app")
+    .withMountedCache("/root/.cache/sccache", dag.cacheVolume("sccache"))
     .withMountedCache("/app/target", dag.cacheVolume("target"))
     .withMountedCache("/root/cargo/registry", dag.cacheVolume("registry"))
     .withExec(
