@@ -10,14 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Fluent CI CLI
-        uses: fluentci-io/setup-fluentci@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-          targets: wasm32-unknown-unknown
+      - name: Setup Fluent CI Engine CLI
+        run: |
+          wget https://github.com/fluentci-io/fluentci-engine/releases/download/v0.2.5/fluentci-engine_v0.2.5_x86_64-unknown-linux-gnu.tar.gz
+          tar xvf fluentci-engine_v0.2.5_x86_64-unknown-linux-gnu.tar.gz
+          sudo mv fluentci-engine /usr/local/bin
       - name: Build
         run: |
-          cargo build --release --target wasm32-unknown-unknown
+          fluentci-engine call -m $MODULE -- \
+          target_add wasm32-unknown-unknown
+          fluentci-engine call -m $MODULE -- \
+          build \
+          --target wasm32-unknown-unknown \
+          --release
           ls -ltr target/wasm32-unknown-unknown/release/
         working-directory: plugin
+        env:
+          MODULE: https://github.com/fluent-ci-templates/rust-pipeline/releases/download/v0.10.1/rust.wasm
