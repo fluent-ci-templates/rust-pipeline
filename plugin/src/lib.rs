@@ -83,3 +83,31 @@ pub fn build(args: String) -> FnResult<String> {
         .stdout()?;
     Ok(stdout)
 }
+
+#[plugin_fn]
+pub fn target_add(args: String) -> FnResult<String> {
+    set_envs()?;
+
+    let stdout = dag()
+        .pipeline("target_add")?
+        .pkgx()?
+        .with_exec(vec!["pkgx", "install", "curl"])?
+        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
+        .with_exec(vec!["rustup", "target", "add", &args])?
+        .stdout()?;
+    Ok(stdout)
+}
+
+#[plugin_fn]
+pub fn component_add(args: String) -> FnResult<String> {
+    set_envs()?;
+
+    let stdout = dag()
+        .pipeline("component_add")?
+        .pkgx()?
+        .with_exec(vec!["pkgx", "install", "curl"])?
+        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
+        .with_exec(vec!["rustup", "component", "add", &args])?
+        .stdout()?;
+    Ok(stdout)
+}
