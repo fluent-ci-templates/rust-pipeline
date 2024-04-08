@@ -12,7 +12,7 @@ pub fn clippy() -> FnResult<String> {
     let stdout = dag()
         .pipeline("clippy")?
         .pkgx()?
-        .with_exec(vec!["curl", "wget"])?
+        .with_packages(vec!["curl", "wget"])?
         .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
         .with_exec(vec!["rustup", "component", "add", "clippy"])?
         .with_exec(vec!["cargo", "install", "clippy-sarif", "--version", "0.3.0"])?
@@ -34,7 +34,7 @@ pub fn llvmcov() -> FnResult<String> {
     let stdout = dag()
         .pipeline("llvmcov")?
         .pkgx()?
-        .with_exec(vec!["curl", "wget"])?
+        .with_packages(vec!["curl", "wget"])?
         .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
         .with_exec(vec!["rustup", "component", "add", "llvm-tools"])?
         .with_exec(vec![
