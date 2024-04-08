@@ -1,0 +1,30 @@
+name: release
+on:
+  release:
+    types: [created]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Fluent CI CLI
+        uses: fluentci-io/setup-fluentci@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: wasm32-unknown-unknown
+      - name: Build
+        run: |
+          cargo build --release --target wasm32-unknown-unknown
+          ls -ltr target/wasm32-unknown-unknown/release/
+        working-directory: plugin
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Upload release
+        run: |
+          export FILE=/app/rust.wasm
+          fluentci run github_pipeline release_upload
+        working-directory: plugin/target/wasm32-unknown-unknown/release/
+        env:
+          TAG: ${{ env.RELEASE_VERSION }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
