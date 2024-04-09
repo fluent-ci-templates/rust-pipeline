@@ -10,16 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.41
+      
       - name: Setup Fluent CI CLI
-        run: deno install -A -r https://cli.fluentci.io -n fluentci
-      - name: Setup Dagger
-        run: |
-          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.10.0 sh
-          sudo mv bin/dagger /usr/local/bin
-          dagger version
+        uses: fluentci-io/setup-fluentci@v5
+      
+      - name: Run Wasm Pipeline
+        run: fluentci run --wasm . test
+        working-directory: example
+      
       - name: Run Dagger Pipelines
         run: dagger run deno run -A ../src/dagger/runner.ts clippy test llvm_cov build
         working-directory: example
