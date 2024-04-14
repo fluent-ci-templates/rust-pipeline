@@ -6,6 +6,19 @@ use crate::helpers::set_envs;
 pub mod helpers;
 
 #[plugin_fn]
+pub fn setup() -> FnResult<String> {
+    set_envs()?;
+
+    let stdout = dag()
+        .pipeline("setup")?
+        .pkgx()?
+        .with_packages(vec!["curl"])?
+        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
+        .stdout()?;
+    Ok(stdout)
+}
+
+#[plugin_fn]
 pub fn clippy() -> FnResult<String> {
     set_envs()?;
 
@@ -65,7 +78,7 @@ pub fn test(args: String) -> FnResult<String> {
     let stdout = dag()
         .pipeline("test")?
         .pkgx()?
-        .with_packages(vec!["curl", "wget"])?
+        .with_packages(vec!["curl"])?
         .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
         .with_exec(vec!["PATH=$HOME/.cargo/bin:$PATH", "cargo", "test", &args])?
         .stdout()?;
@@ -79,7 +92,7 @@ pub fn build(args: String) -> FnResult<String> {
     let stdout = dag()
         .pipeline("build")?
         .pkgx()?
-        .with_exec(vec!["pkgx", "install", "curl"])?
+        .with_packages(vec!["curl"])?
         .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
         .with_exec(vec!["PATH=$HOME/.cargo/bin:$PATH", "cargo", "build", &args])?
         .stdout()?;
@@ -93,9 +106,9 @@ pub fn target_add(args: String) -> FnResult<String> {
     let stdout = dag()
         .pipeline("target_add")?
         .pkgx()?
-        .with_exec(vec!["pkgx", "install", "curl"])?
+        .with_packages(vec!["curl"])?
         .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
-        .with_exec(vec!["rustup", "target", "add", &args])?
+        .with_exec(vec!["PATH=$HOME/.cargo/bin:$PATH", "rustup", "target", "add", &args])?
         .stdout()?;
     Ok(stdout)
 }
@@ -107,9 +120,9 @@ pub fn component_add(args: String) -> FnResult<String> {
     let stdout = dag()
         .pipeline("component_add")?
         .pkgx()?
-        .with_exec(vec!["pkgx", "install", "curl"])?
+        .with_packages(vec![ "curl"])?
         .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
-        .with_exec(vec!["rustup", "component", "add", &args])?
+        .with_exec(vec!["PATH=$HOME/.cargo/bin:$PATH", "rustup", "component", "add", &args])?
         .stdout()?;
     Ok(stdout)
 }

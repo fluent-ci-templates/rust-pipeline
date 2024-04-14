@@ -10,14 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Fluent CI CLI
-        uses: fluentci-io/setup-fluentci@v4
+      - name: Setup Fluent CI
+        uses: fluentci-io/setup-fluentci@v5
+        with:
+          wasm: true
+          plugin: deno
+          args: |
+            fmt
+            test
+            coverage
       - name: Run Dagger Pipelines
         run: |
-          fluentci run deno_pipeline fmt test
           dagger -m github.com/fluent-ci-templates/rust-pipeline@main functions
       - name: Upload to Codecov
-        run: fluentci run codecov_pipeline
+        run: fluentci run --wasm codecov upload
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   publish:
