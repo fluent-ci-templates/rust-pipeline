@@ -13,7 +13,7 @@ pub fn setup() -> FnResult<String> {
         .pipeline("setup")?
         .pkgx()?
         .with_packages(vec!["curl"])?
-        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
+        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -- -y"])?
         .stdout()?;
     Ok(stdout)
 }
@@ -26,7 +26,7 @@ pub fn clippy() -> FnResult<String> {
         .pipeline("clippy")?
         .pkgx()?
         .with_packages(vec!["curl", "wget"])?
-        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
+        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -- -y"])?
         .with_exec(vec!["rustup", "component", "add", "clippy"])?
         .with_exec(vec!["PATH=$HOME/.cargo/bin:$PATH", "cargo", "install", "clippy-sarif", "--version", "0.3.0"])?
         .with_exec(vec!["PATH=$HOME/.cargo/bin:$PATH","cargo", "install", "sarif-fmt", "--version", "0.3.0"])?
@@ -49,7 +49,7 @@ pub fn llvmcov() -> FnResult<String> {
         .pipeline("llvmcov")?
         .pkgx()?
         .with_packages(vec!["curl", "wget"])?
-        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
+        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -- -y"])?
         .with_exec(vec!["rustup", "component", "add", "llvm-tools"])?
         .with_exec(vec![
             "wget",
@@ -79,7 +79,7 @@ pub fn test(args: String) -> FnResult<String> {
         .pipeline("test")?
         .pkgx()?
         .with_packages(vec!["curl"])?
-        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
+        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -- -y"])?
         .with_exec(vec!["PATH=$HOME/.cargo/bin:$PATH", "cargo", "test", &args])?
         .stdout()?;
     Ok(stdout)
@@ -93,7 +93,7 @@ pub fn build(args: String) -> FnResult<String> {
         .pipeline("build")?
         .pkgx()?
         .with_packages(vec!["curl"])?
-        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
+        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -- -y"])?
         .with_exec(vec!["PATH=$HOME/.cargo/bin:$PATH", "cargo", "build", &args])?
         .stdout()?;
     Ok(stdout)
@@ -107,7 +107,7 @@ pub fn target_add(args: String) -> FnResult<String> {
         .pipeline("target_add")?
         .pkgx()?
         .with_packages(vec!["curl"])?
-        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
+        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -- -y"])?
         .with_exec(vec!["PATH=$HOME/.cargo/bin:$PATH", "rustup", "target", "add", &args])?
         .stdout()?;
     Ok(stdout)
@@ -121,7 +121,7 @@ pub fn component_add(args: String) -> FnResult<String> {
         .pipeline("component_add")?
         .pkgx()?
         .with_packages(vec![ "curl"])?
-        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])?
+        .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -- -y"])?
         .with_exec(vec!["PATH=$HOME/.cargo/bin:$PATH", "rustup", "component", "add", &args])?
         .stdout()?;
     Ok(stdout)
