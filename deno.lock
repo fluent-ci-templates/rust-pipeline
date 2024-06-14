@@ -2,6 +2,8 @@
   "version": "3",
   "packages": {
     "specifiers": {
+      "jsr:@ib/sleep@0.0.3": "jsr:@ib/sleep@0.0.3",
+      "jsr:@jotsr/delayed@2.1.1": "jsr:@jotsr/delayed@2.1.1",
       "jsr:@std/assert@^0.217.0": "jsr:@std/assert@0.217.0",
       "jsr:@std/assert@^0.218.2": "jsr:@std/assert@0.218.2",
       "jsr:@std/flags@0.218.2": "jsr:@std/flags@0.218.2",
@@ -29,6 +31,12 @@
       "npm:zod@3.22.1": "npm:zod@3.22.1"
     },
     "jsr": {
+      "@ib/sleep@0.0.3": {
+        "integrity": "c24e54ea26f177be5c368cc82ac79d9b79b583c7fc1f1eeedad6f1f064215879"
+      },
+      "@jotsr/delayed@2.1.1": {
+        "integrity": "b636cc1ae8a2843412738f40c1cf5f117d909bf6986dbce7af945afd363b65b7"
+      },
       "@std/assert@0.217.0": {
         "integrity": "c98e279362ca6982d5285c3b89517b757c1e3477ee9f14eb2fdf80a45aaa9642",
         "dependencies": [
