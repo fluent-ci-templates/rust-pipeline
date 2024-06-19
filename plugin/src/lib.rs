@@ -13,6 +13,7 @@ pub fn setup() -> FnResult<String> {
         .pipeline("setup")?
         .pkgx()?
         .with_packages(vec!["curl"])?
+        .with_exec(vec!["type cc > /dev/null || pkgx install gnu.org/gcc"])?
         .with_exec(vec!["type rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"])?
         .stdout()?;
     Ok(stdout)

@@ -5,4 +5,4 @@ authors = [
 description = "CI/CD Plugin for Rust"
 license = "MIT"
 name = "rust"
-version = "0.10.4"
+version = "0.10.5"
