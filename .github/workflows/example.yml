@@ -20,5 +20,5 @@ jobs:
           working-directory: example
 
       - name: Run Dagger Pipelines
-        run: dagger run deno run -A ../src/dagger/runner.ts clippy test llvm_cov build
+        run: dagger run deno run -A ../src/runner.ts clippy test llvm_cov build
         working-directory: example

@@ -3,7 +3,8 @@
  * @description This module provides a set of functions to build, test, and run clippy on a Rust project 🦀
  */
 
-import { dag, env, Directory, DirectoryID, File } from "../../deps.ts";
+import { dag, env, type Directory, type File } from "../deps.ts";
+import { getDirectory } from "./helpers.ts";
 
 export enum Job {
   clippy = "clippy",
@@ -13,28 +14,6 @@ export enum Job {
 }
 
 export const exclude = ["target", ".git", ".devbox", ".fluentci"];
-
-export const getDirectory = async (
-  src: string | Directory | undefined = "."
-) => {
-  if (src instanceof Directory) {
-    return src;
-  }
-  if (typeof src === "string") {
-    try {
-      const directory = dag.loadDirectoryFromID(src as DirectoryID);
-      await directory.id();
-      return directory;
-    } catch (_) {
-      return dag.host
-        ? dag.host().directory(src)
-        : dag.currentModule().source().directory(src);
-    }
-  }
-  return dag.host
-    ? dag.host().directory(src)
-    : dag.currentModule().source().directory(src);
-};
 
 /**
  * Run clippy
@@ -51,7 +30,7 @@ export async function clippy(
   const ctr = dag
     .pipeline(Job.clippy)
     .container()
-    .from("rust:1.73-bookworm")
+    .from("rust:1.80-bookworm")
     .withExec(["apt-get", "update"])
     .withExec(["apt-get", "install", "-y", "build-essential", "pkg-config"])
     .withExec(["rustup", "component", "add", "clippy"])
@@ -91,7 +70,7 @@ export async function llvmCov(
   const ctr = dag
     .pipeline(Job.llvmCov)
     .container()
-    .from("rust:1.73-bookworm")
+    .from("rust:1.80-bookworm")
     .withExec(["apt-get", "update"])
     .withExec([
       "apt-get",
