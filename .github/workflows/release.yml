@@ -11,7 +11,7 @@ jobs:
         uses: fluentci-io/setup-fluentci@v5
         with:
           wasm: true
-          plugin: .
+          plugin: rust
           args: |
             target_add wasm32-unknown-unknown
             build --target wasm32-unknown-unknown --release
@@ -25,7 +25,7 @@ jobs:
       - name: Upload release
         run: |
           export FILE=./plugin/target/wasm32-unknown-unknown/release/rust.wasm
-          fluentci run --wasm github release_upload $FILE
+          fluentci run --wasm github release_upload $TAG $FILE
         env:
           TAG: ${{ env.RELEASE_VERSION }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
