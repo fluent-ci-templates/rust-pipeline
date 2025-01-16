@@ -1,8 +1,6 @@
 [package]
-authors = [
-  "Tsiry Sandratraina <tsiry.sndr@fluentci.io>",
-]
+authors = ["Tsiry Sandratraina <tsiry.sndr@fluentci.io>"]
 description = "CI/CD Plugin for Rust"
 license = "MIT"
 name = "rust"
-version = "0.11.0"
+version = "0.11.1"
